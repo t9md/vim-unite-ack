@@ -3,9 +3,9 @@ Unite plugin for Ack
 
 ## try
 
-**:Unite ack**
+**:Unite ack**  
 or
-**:UniteWithCursorWord**
+**:UniteWithCursorWord ack**  
 
 ## config
 * g:unite_source_ack_command
