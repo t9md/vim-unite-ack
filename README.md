@@ -3,7 +3,7 @@ Unite plugin for Ack
 
 ## try
 
-`Unite ack**` or :UniteWithCursorWord ack**  
+`Unite ack` or `:UniteWithCursorWord ack`
 
 ## config
 
