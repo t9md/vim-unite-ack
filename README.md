@@ -33,7 +33,8 @@ Keymap example
         return pat
     endfunction"}}}
     nnoremap <silent> <Space>a  :<C-u>UniteWithCursorWord ack<CR>
-    vnoremap <silent> <Space>a  :<C-u>exe "Unite -input=" .  escape(<SID>SelectedText(), " ") . " ack"<CR>
+    vnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack -input=" .  escape(<SID>SelectedText(), " ") . " ack"<CR>
+    nnoremap <silent> <Space>A  :<C-u>UniteResume ack<CR>
 
 Screen capture
 -----------------------------------------------------------------
