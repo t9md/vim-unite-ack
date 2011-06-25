@@ -36,6 +36,7 @@ Keymap example
     vnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack -input=" .  escape(<SID>SelectedText(), " ") . " ack"<CR>
     nnoremap <silent> <Space>A  :<C-u>UniteResume ack<CR>
 
+
 Screen capture
 -----------------------------------------------------------------
 ![vim-unite-ack.png](https://github.com/t9md/t9md/raw/master/img/vim-unite-ack.png)
