@@ -14,6 +14,7 @@ function! s:unite_source.hooks.on_init(args, context) "{{{
     let a:context.source__search = !empty(a:context.input)
                 \ ? a:context.input
                 \ : input('Search: ')
+    " let a:context.input = "ijjj"
 endfunction"}}}
 
 function! s:unite_source.hooks.on_syntax(args, context) "{{{
@@ -24,7 +25,7 @@ function! s:unite_source.hooks.on_syntax(args, context) "{{{
 endfunction"}}}
 
 function! s:unite_source.gather_candidates(args, context)
-    let cmd=g:unite_source_ack_command . " " . a:context.source__search
+    let cmd=g:unite_source_ack_command . " '" . a:context.source__search . "'"
     let lines = split(system(cmd), "\n")
     let candidates = []
     for l in lines
@@ -34,7 +35,7 @@ function! s:unite_source.gather_candidates(args, context)
     return candidates
 endfunction
 
-" let b:dev = 1
+let b:develop = 1
 if exists("b:develop")
     call unite#define_source(s:unite_source)
     unlet s:unite_source
