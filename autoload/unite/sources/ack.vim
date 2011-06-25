@@ -35,7 +35,7 @@ function! s:unite_source.gather_candidates(args, context)
     return candidates
 endfunction
 
-let b:develop = 1
+" let b:develop = 1
 if exists("b:develop")
     call unite#define_source(s:unite_source)
     unlet s:unite_source
