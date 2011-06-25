@@ -14,7 +14,6 @@ function! s:unite_source.hooks.on_init(args, context) "{{{
     let a:context.source__search = !empty(a:context.input)
                 \ ? a:context.input
                 \ : input('Search: ')
-    " let a:context.input = "ijjj"
 endfunction"}}}
 
 function! s:unite_source.hooks.on_syntax(args, context) "{{{
