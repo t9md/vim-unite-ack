@@ -9,8 +9,10 @@ call unite#util#set_default('g:unite_source_ack_command',
 call unite#util#set_default('g:unite_source_ack_highlight', 1)
 call unite#util#set_default('g:unite_source_ack_highlight_color',
             \ "gui=bold ctermfg=255 ctermbg=4 guifg=#ffffff guibg=#0a7383" )
+call unite#util#set_default('g:unite_source_ack_ignore_case', 0)
 
 function! s:unite_source.hooks.on_init(args, context) "{{{
+    exe "highlight uniteSource_Ack_target " . g:unite_source_ack_highlight_color
     let a:context.source__search = !empty(a:context.input)
                 \ ? a:context.input
                 \ : input('Search: ')
@@ -18,13 +20,19 @@ endfunction"}}}
 
 function! s:unite_source.hooks.on_syntax(args, context) "{{{
     if !g:unite_source_ack_highlight | return | endif
+    if g:unite_source_ack_ignore_case
+        syn case ignore
+    endif
     let syncmd = "syntax match uniteSource_Ack_target '" . a:context.source__search . "' containedin=uniteSource_Ack"
     exe syncmd
-    exe "highlight uniteSource_Ack_target " . g:unite_source_ack_highlight_color
 endfunction"}}}
 
 function! s:unite_source.gather_candidates(args, context)
-    let cmd=g:unite_source_ack_command . " '" . a:context.source__search . "'"
+    let ack_cmd = g:unite_source_ack_command
+    if g:unite_source_ack_ignore_case
+        let ack_cmd.= " -i "
+    endif
+    let cmd=ack_cmd . " '" . a:context.source__search . "'"
     let lines = split(system(cmd), "\n")
     let candidates = []
     for l in lines
