@@ -11,9 +11,10 @@ let s:unite_source.syntax = "uniteSource__Ack"
 
 function! s:unite_source.hooks.on_init(args, context) "{{{
     execute 'highlight default link uniteSource__Ack_target ' . g:unite_source_ack_search_word_highlight
-    let a:context.source__search = !empty(a:context.input)
-                \ ? a:context.input
-                \ : input('Search: ')
+    let target  = get(a:args, 0, '')
+    let a:context.source__search = target == ''
+                \ ? input('Search: ')
+                \ : target
 endfunction"}}}
 
 function! s:unite_source.hooks.on_syntax(args, context) "{{{

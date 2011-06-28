@@ -3,7 +3,7 @@ Unite plugin for Ack
 Try
 ----------------------------------
 
-`Unite ack` or `:UniteWithCursorWord ack`
+`Unite ack`
 
 Config
 ----------------------------------
@@ -30,21 +30,31 @@ I'll refactor when time would available.
 Keymap example
 ----------------------------------
 
-    function! s:SelectedText() "{{{
+    command! UniteAckToggleCase :let g:unite_source_ack_ignore_case=!g:unite_source_ack_ignore_case|let g:unite_source_ack_ignore_case
+
+    function! s:escape_visual(...) "{{{
+        let escape = a:0 ? a:1 : ''
         normal `<
         let s = col('.') - 1
         normal `>
         let e = col('.') - 1
         let line = getline('.')
         let pat = line[s : e]
-        return pat
+        return escape(pat, escape)
     endfunction"}}}
-    nnoremap <silent> <Space>a  :<C-u>UniteWithCursorWord ack<CR>
-    vnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack -input=" .  escape(<SID>SelectedText(), " ") . " ack"<CR>
+    function! s:visual_unite_input() "{{{
+        return s:escape_visual(" ")
+    endfunction"}}}
+    function! s:visual_unite_arg() "{{{
+        return s:escape_visual(' :\')
+    endfunction"}}}
+
+    " unite ack
+    nnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack ack:" . escape(expand('<cword>'),' :\')<CR>
+    vnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack ack:" . <SID>visual_unite_arg()<CR>
     nnoremap <silent> <Space>A  :<C-u>UniteResume ack<CR>
 
     command! UniteAckToggleCase :let g:unite_source_ack_ignore_case=!g:unite_source_ack_ignore_case|let g:unite_source_ack_ignore_case
-
 
 Screen capture
 -----------------------------------------------------------------
