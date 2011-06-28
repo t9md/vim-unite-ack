@@ -1,30 +1,27 @@
+call unite#util#set_default('g:unite_source_ack_command', "ack-grep --nocolor --nogroup")
+call unite#util#set_default('g:unite_source_ack_enable_highlight', 1)
+call unite#util#set_default('g:unite_source_ack_search_word_highlight', 'Search')
+call unite#util#set_default('g:unite_source_ack_ignore_case', 0)
+
 let s:unite_source = {}
 let s:unite_source.name = 'ack'
 let s:unite_source.description = 'ack the sources'
 let s:unite_source.hooks = {}
-let s:unite_source.syntax = "uniteSource_Ack"
-
-call unite#util#set_default('g:unite_source_ack_command',
-            \ "ack-grep --nocolor --nogroup")
-call unite#util#set_default('g:unite_source_ack_highlight', 1)
-call unite#util#set_default('g:unite_source_ack_highlight_color',
-            \ "gui=bold ctermfg=255 ctermbg=4 guifg=#ffffff guibg=#0a7383" )
-call unite#util#set_default('g:unite_source_ack_ignore_case', 0)
+let s:unite_source.syntax = "uniteSource__Ack"
 
 function! s:unite_source.hooks.on_init(args, context) "{{{
-    exe "highlight uniteSource_Ack_target " . g:unite_source_ack_highlight_color
+    execute 'highlight default link uniteSource__Ack_target ' . g:unite_source_ack_search_word_highlight
     let a:context.source__search = !empty(a:context.input)
                 \ ? a:context.input
                 \ : input('Search: ')
 endfunction"}}}
 
 function! s:unite_source.hooks.on_syntax(args, context) "{{{
-    if !g:unite_source_ack_highlight | return | endif
+    if !g:unite_source_ack_enable_highlight | return | endif
     if g:unite_source_ack_ignore_case
         syn case ignore
     endif
-    let syncmd = "syntax match uniteSource_Ack_target '" . a:context.source__search . "' containedin=uniteSource_Ack"
-    exe syncmd
+    execute "syntax match uniteSource__Ack_target '" . a:context.source__search . "' containedin=uniteSource__Ack"
 endfunction"}}}
 
 function! s:unite_source.gather_candidates(args, context)
@@ -35,9 +32,16 @@ function! s:unite_source.gather_candidates(args, context)
     let cmd=ack_cmd . " '" . a:context.source__search . "'"
     let lines = split(system(cmd), "\n")
     let candidates = []
-    for l in lines
-        let [fname, line] = matchlist(l,'\v(.{-}):(\d+):')[1:2]
-        call add(candidates, { "word": l, "source": "ack", "kind": "jump_list", "action__path": fname, "action__line": line})
+    for line in lines
+        let [fname, lineno, text ] = matchlist(line,'\v(.{-}):(\d+):(.*)$')[1:3]
+        call add(candidates, {
+                    \ "word": line,
+                    \ "source": "ack",
+                    \ "kind": "jump_list",
+                    \ "action__path": fname,
+                    \ "action__line": lineno,
+                    \ "action__text": text,
+                    \ } )
     endfor
     return candidates
 endfunction
@@ -53,3 +57,4 @@ function! unite#sources#ack#define() "{{{
   return s:unite_source
 endfunction "}}}
 " }}}
+" vim: expandtab:ts=4:sts=4:sw=4
