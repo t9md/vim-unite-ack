@@ -1,9 +1,13 @@
 Unite plugin for Ack
 ==================================
-Try
+Syntax
 ----------------------------------
 
-`Unite ack`
+    :Unite ack:directory:search_word<CR>
+
+if directory is ommited like
+    :Unite ack::search_word<CR>
+current directory is used.
 
 Config
 ----------------------------------
@@ -26,11 +30,26 @@ so g:unite_source_ack_command shoud not set `-i` explicitly.
 this is dirty , not consistent, but usefull.
 I'll refactor when time would available.
 
+### * `g:unite_source_ack_enable_print_cmd`
+control wheter executed ack command is printed or not.
+defaut: `1`
 
-Keymap example
+### * `let g:unite_source_ack_targetdir_shortcut`
+dictionary which key is `shortcut` and value is `actulal directory`
+Please check configuration example.
+default: `{}`
+
+Confituration example
 ----------------------------------
 
     command! UniteAckToggleCase :let g:unite_source_ack_ignore_case=!g:unite_source_ack_ignore_case|let g:unite_source_ack_ignore_case
+    " show executed commmand
+    let g:unite_source_ack_enable_print_cmd = 1
+    " define shortcut so that I can use :Unite ack:g:some_method to search some_method from gem directory
+    let g:unite_source_ack_targetdir_shortcut = {
+                \ 'g':  '/var/lib/gems/1.8/gems',
+                \ 'b': '$HOME/.vim/bundle'
+                \ }
 
     function! s:escape_visual(...) "{{{
         let escape = a:0 ? a:1 : ''
@@ -50,8 +69,8 @@ Keymap example
     endfunction"}}}
 
     " unite ack
-    nnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack ack:" . escape(expand('<cword>'),' :\')<CR>
-    vnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack ack:" . <SID>visual_unite_arg()<CR>
+    nnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack ack::" . escape(expand('<cword>'),' :\')<CR>
+    vnoremap <silent> <Space>a  :<C-u>exe "Unite -buffer-name=ack ack::" . <SID>visual_unite_arg()<CR>
     nnoremap <silent> <Space>A  :<C-u>UniteResume ack<CR>
 
     command! UniteAckToggleCase :let g:unite_source_ack_ignore_case=!g:unite_source_ack_ignore_case|let g:unite_source_ack_ignore_case

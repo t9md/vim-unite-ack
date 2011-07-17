@@ -2,6 +2,8 @@ call unite#util#set_default('g:unite_source_ack_command', "ack-grep --nocolor --
 call unite#util#set_default('g:unite_source_ack_enable_highlight', 1)
 call unite#util#set_default('g:unite_source_ack_search_word_highlight', 'Search')
 call unite#util#set_default('g:unite_source_ack_ignore_case', 0)
+call unite#util#set_default('g:unite_source_ack_enable_print_cmd', 0)
+call unite#util#set_default('g:unite_source_ack_targetdir_shortcut', {})
 
 let s:unite_source = {}
 let s:unite_source.name = 'ack'
@@ -9,12 +11,17 @@ let s:unite_source.description = 'ack the sources'
 let s:unite_source.hooks = {}
 let s:unite_source.syntax = "uniteSource__Ack"
 
+function! s:convert_shortcut(shortcut)
+    return get(g:unite_source_ack_targetdir_shortcut, a:shortcut, shortcut)
+endfunction
 function! s:unite_source.hooks.on_init(args, context) "{{{
     execute 'highlight default link uniteSource__Ack_target ' . g:unite_source_ack_search_word_highlight
-    let target  = get(a:args, 0, '')
-    let a:context.source__search = target == ''
-                \ ? input('Search: ')
-                \ : target
+    let targetdir  = get(a:args, 0, '')
+    let search     = get(a:args, 1, '')
+    if empty(search)  | let search = input('Search: ')| endif
+    
+    let a:context.source__targetdir = get(g:unite_source_ack_targetdir_shortcut, targetdir, targetdir)
+    let a:context.source__search = search
 endfunction"}}}
 
 function! s:unite_source.hooks.on_syntax(args, context) "{{{
@@ -30,7 +37,16 @@ function! s:unite_source.gather_candidates(args, context)
     if g:unite_source_ack_ignore_case
         let ack_cmd.= " -i "
     endif
-    let cmd=ack_cmd . " '" . a:context.source__search . "'"
+    let cmd=ack_cmd . " '" . a:context.source__search . "' "
+
+    if !empty(a:context.source__targetdir)
+        let cmd = cmd . " " . a:context.source__targetdir
+    endif
+
+    if g:unite_source_ack_enable_print_cmd
+        call unite#print_message(cmd)
+    endif
+    
     let lines = split(system(cmd), "\n")
     let candidates = []
     for line in lines
