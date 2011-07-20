@@ -4,6 +4,7 @@ call unite#util#set_default('g:unite_source_ack_search_word_highlight', 'Search'
 call unite#util#set_default('g:unite_source_ack_ignore_case', 0)
 call unite#util#set_default('g:unite_source_ack_enable_print_cmd', 0)
 call unite#util#set_default('g:unite_source_ack_targetdir_shortcut', {})
+call unite#util#set_default('g:unite_source_ack_enable_convert_targetdir_shortcut', 0)
 
 let s:unite_source = {}
 let s:unite_source.name = 'ack'
@@ -11,9 +12,7 @@ let s:unite_source.description = 'ack the sources'
 let s:unite_source.hooks = {}
 let s:unite_source.syntax = "uniteSource__Ack"
 
-function! s:convert_shortcut(shortcut)
-    return get(g:unite_source_ack_targetdir_shortcut, a:shortcut, shortcut)
-endfunction
+
 function! s:unite_source.hooks.on_init(args, context) "{{{
     execute 'highlight default link uniteSource__Ack_target ' . g:unite_source_ack_search_word_highlight
     let targetdir  = get(a:args, 0, '')
@@ -33,6 +32,7 @@ function! s:unite_source.hooks.on_syntax(args, context) "{{{
 endfunction"}}}
 
 function! s:unite_source.gather_candidates(args, context)
+    " call unite#print_message( string(a:args ))
     let ack_cmd = g:unite_source_ack_command
     if g:unite_source_ack_ignore_case
         let ack_cmd.= " -i "
@@ -52,7 +52,7 @@ function! s:unite_source.gather_candidates(args, context)
     for line in lines
         let [fname, lineno, text ] = matchlist(line,'\v(.{-}):(\d+):(.*)$')[1:3]
         call add(candidates, {
-                    \ "word": line,
+                    \ "word": fname . ":" . lineno . ":" . text,
                     \ "source": "ack",
                     \ "kind": "jump_list",
                     \ "action__path": fname,
