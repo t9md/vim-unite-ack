@@ -23,7 +23,7 @@ function! s:reverse_convert_shortcut(path)
 
   let s:reverse_shortcut = {}
   for [key, val] in items(g:unite_source_ack_targetdir_shortcut)
-    let s:reverse_shortcut[fnamemodify(expand(val), ":~")] = "[". key. "]"
+    let s:reverse_shortcut[fnamemodify(expand(val), ":~")] = "[". key. "] "
   endfor
   for p in s:reverse_sort_by_length(keys(s:reverse_shortcut))
     let path = substitute(path, escape(p,'~.'), get(s:reverse_shortcut, p), '')
