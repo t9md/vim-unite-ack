@@ -19,7 +19,7 @@ function! s:unite_source.hooks.on_init(args, context) "{{{
     let search     = get(a:args, 1, '')
     if empty(search)  | let search = input('Search: ')| endif
     
-    let a:context.source__targetdir = get(g:unite_source_ack_targetdir_shortcut, targetdir, targetdir)
+    let a:context.source__directory = get(g:unite_source_ack_targetdir_shortcut, targetdir, targetdir)
     let a:context.source__search = search
 endfunction"}}}
 
@@ -39,8 +39,8 @@ function! s:unite_source.gather_candidates(args, context)
     endif
     let cmd=ack_cmd . " '" . a:context.source__search . "' "
 
-    if !empty(a:context.source__targetdir)
-        let cmd = cmd . " " . a:context.source__targetdir
+    if !empty(a:context.source__directory)
+        let cmd = cmd . " " . a:context.source__directory
     endif
 
     if g:unite_source_ack_enable_print_cmd
