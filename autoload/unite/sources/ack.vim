@@ -6,12 +6,13 @@ call unite#util#set_default('g:unite_source_ack_enable_print_cmd', 0)
 call unite#util#set_default('g:unite_source_ack_targetdir_shortcut', {})
 call unite#util#set_default('g:unite_source_ack_enable_convert_targetdir_shortcut', 0)
 
-let s:unite_source = {}
-let s:unite_source.filters = ['converter_relative_word', 'matcher_default', 'sorter_default' ]
-let s:unite_source.name = 'ack'
-let s:unite_source.description = 'ack the sources'
-let s:unite_source.hooks = {}
-let s:unite_source.syntax = "uniteSource__Ack"
+let s:unite_source = {
+            \ "name": "ack",
+            \ "filters": ['converter_relative_word', 'matcher_default', 'sorter_default' ],
+            \ "description": 'ack the sources',
+            \ "hooks": {},
+            \ "syntax": "uniteSource__Ack",
+            \ }
 
 function! s:unite_source.hooks.on_init(args, context) "{{{
     execute 'highlight default link uniteSource__Ack_target ' . g:unite_source_ack_search_word_highlight
