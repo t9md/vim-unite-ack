@@ -1,4 +1,4 @@
-CAUTION
+CAUTION NO LONGER MAINTAINED
 ==================================
 I won't maintain or update this program.
 Since you now can set `let g:unite_source_grep_command = 'ag'` and it's comfortably fast.
